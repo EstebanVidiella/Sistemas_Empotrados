@@ -111,8 +111,16 @@ int main (void)
     uart_config(baud_9600);
      
     while(1)
-    {
+    {  
+        
+        if(U1STAbits.URXDA == 1)
+        {
+            var = U1RXREG;
+        }
+        
         U1TXREG = 40;
+        U1TRXREG = '\r';
+        U1TRXREG = '\n';
         delay_ms(500);
     }
     
