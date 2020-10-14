@@ -28,3 +28,23 @@ void uart_config (unsigned int baud)
 
 
    //configuracion de registro de U1STA
+    U1STAbits.UTXISEL0 = 0; //Tema de interrupciones(no mirar aun)
+    U1STAbits.UTXISEL1 = 0; //Tema de interrupciones(no mirar aun)
+    U1STAbits.UTXINV = 0; //El estado en reposo del pin en transmición es High
+    U1STAbits.UTXBRK = 0; //No usamos trama de sincronización
+    U1STAbits.UTXEN = 1;//El transmisor a pleno funcionamiento
+    U1STAbits.URXISEL = 0;//Tema de interrupciones(no mirar aun)
+    U1STAbits.ADDEN = 0; //No usamos direccionamieno
+    //U1STAbits.RIDLE = 0;
+    U1STAbits.OERR = 0; //Reseteamos buffer de recepcion
+    
+    
+    //configuracion la velocidad de transmisión/recepción de los datos
+    U1BRG = baud;
+    U1MODEbits.UARTEN = 1; //Uart habilitada por completo
+}
+    
+    
+    
+    
+    
