@@ -113,17 +113,19 @@ int main (void)
     AD1PCFGL = 0xFFFF; //Primer paso. Todos los pines configurados como pine digitales
     
     uart_config(baud_9600);
-     
+    
+    unsigned char var = 48;
+    
     while(1)
     {  
         
         if(U1STAbits.URXDA == 1)
         {
-            var = U1RXREG;
+            var = U1RXREG; //registros recibidos
         }
         
         sprintf(buffer, "Esteban y Bruno%d %c); 
-        U1TXREG = 48;
+        U1TXREG = var;//imprimirá el número de la variable en ascii
         U1TRXREG = '\r';
         U1TRXREG = '\n';
         delay_ms(500);
