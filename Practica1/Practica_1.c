@@ -54,9 +54,12 @@ void uart_config (unsigned int baud)
 {
     //configuracion de pines tx y rx
     TRISCbits.TRISC0 = 1, //Pin de recepcion de uart establecido como entrada
-    RPINR18bits.U1RXR = 16; //Pin de recepcion RC0 trabajando con el modulo uart (RP16) (registro que no dice la tabla y el numero se asigna segun el pin que usamos)
-    RPOR8bits.RP17R = 3; //U1TX conectado con el pin RC1 (RP17)
-    
+    //PARA LOS PINES RC0 Y RC1
+    //RPINR18bits.U1RXR = 16; //Pin de recepcion RC0 trabajando con el modulo uart (RP16) (registro que no dice la tabla y el numero se asigna segun el pin que usamos)
+    //RPOR8bits.RP17R = 3; //U1TX conectado con el pin RC1 (RP17)
+    //PARA LOS PINES RC2 Y RC3
+    RPINR18bits.U1RXR = 18; //Pin de recepción RC2
+    RPOR9bits.RP19R = 3; //U1TX conectado con el pin RC3 (RP19)
 
     //configuracion de registro de U1MODE
     U1MODEbits.UARTEN = 0; //Deshbilitar Uart
