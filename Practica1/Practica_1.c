@@ -38,7 +38,8 @@
 // Use project enums instead of #define for ON and OFF.
 
 #include <xc.h>
-#define baud_9600 1040
+#include <string.h>
+#define baud_9600 1041 //estandar
 
 void delay_ms(unsigned long time_ms)
 {
@@ -121,13 +122,18 @@ int main (void)
             var = U1RXREG;
         }
         
-        U1TXREG = 40;
+        sprintf(buffer, "Esteban y Bruno%d %c); 
+        U1TXREG = 48;
         U1TRXREG = '\r';
         U1TRXREG = '\n';
         delay_ms(500);
     }
     
+    
+    
+    
     return 0;
+    
     
 }  
     
