@@ -114,7 +114,7 @@ int main (void)
     
     uart_config(baud_9600);
     
-    unsigned char var = 48;
+    unsigned char var = 0;
     
     while(1)
     {  
@@ -124,14 +124,15 @@ int main (void)
             var = U1RXREG; //registros recibidos
         }
         
-        sprintf(buffer, "Esteban y Bruno%d %c); 
-        U1TXREG = var;//imprimirá el número de la variable en ascii
+        sprintf(buffer, "Esteban y Bruno%d %c,var); 
+        var= var++;
+        //U1TXREG = var;//imprimirá el número de la variable en ascii
         U1TRXREG = '\r';
         U1TRXREG = '\n';
         delay_ms(500);
     }
     
-    
+    RPOR1bits.RP3R; //El pin del led
     
     
     return 0;
