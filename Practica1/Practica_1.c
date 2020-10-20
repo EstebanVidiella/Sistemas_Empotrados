@@ -41,6 +41,9 @@
 #include <string.h>
 #define baud_9600 1041 //estandar
 
+#define led_rojo   LATBbits.LATB7 //inicializamos el led rojo al pin RB4
+#define led_verde  LATAbits.LATA7 //inicializamos el led verde al pin RB0
+
 void delay_ms(unsigned long time_ms)
 {
     unsigned long u;
@@ -143,8 +146,14 @@ segundos.*/
     /*2. Al detectar la tecla ‘E’ del teclado, el microcontrolador deberá encender un LED de color
 rojo. Al detectar la tecla ‘A’, el microcontrolador deberá apagar dicho LED. Por defecto,
 el LED debe permanecer apagado*/
-                
-    RPOR1bits.RP3R; //El pin del led
+            if(U1STAbits.URXDA == 1){
+            if(U1RXREG == 69 ){ // Tecla E en ascii
+                led_rojo = 1;        // Encender led D2
+            }
+            else if(U1RXREG == 65 ){ //Tecla A en ascii
+                led_rojo = 0;        // Apagar led D2
+            }
+    
     
     
     return 0;
