@@ -135,7 +135,7 @@ segundos.*/
             var = U1RXREG; //registros recibidos
         }
         if(U1RXREG == 32){
-                var = '0';
+                var = 0;
             }
         }
         sprintf(buffer, "Esteban y Bruno%d %c,var); 
@@ -179,7 +179,7 @@ por tanto el LED verde deberá permanecer apagado.*/
     }
 /*4. Al detectar la barra espaciadora, el contador del apartado 1, deberá resetearse y
 comenzar de nuevo la cuenta partiendo del valor 0.*/
-                
+                //está donde el ejercicio 1
 
     
     return 0;
