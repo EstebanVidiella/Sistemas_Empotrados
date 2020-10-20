@@ -162,12 +162,12 @@ el LED debe permanecer apagado*/
   /*  3. Al pulsar la tecla ‘H’, se deberá ejecutar una rutina que haga parpadear un LED verde
 cada 250 milisegundos. Volver a pulsar la tecla ‘H’, deberá deshabilitar dicha función y
 por tanto el LED verde deberá permanecer apagado.*/
-                
+                bool hrutina = false; //declaramos variable
                 if(U1RXREG == 72){ // Tecla H en ascii
-                Hrutina = Hrutina!; //pulsar h activa o desactiva, es decir que hace lo contrario (!)                  
+                hrutina = hrutina!; //pulsar h activa o desactiva, es decir que hace lo contrario (!)                  
             }
-                if(Hrutina == true){//si está pulsado por  primera vez
-                    while(Hrutina == true){     //mientras siga true se enciende, espera 250 miliesegundos y se apaga 
+                if(hrutina == true){//si está pulsado por  primera vez
+                    while(hrutina == true){     //mientras siga true se enciende, espera 250 miliesegundos y se apaga 
                          led_verde =1;
                          delay_ms(250);  
                         led_verde = 0;
