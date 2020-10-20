@@ -134,7 +134,7 @@ segundos.*/
         {
             var = U1RXREG; //registros recibidos
         }
-        if(U1RXREG == 32){
+        if(U1RXREG == 32){//ejercicio 4
                 var = 0;
             }
         }
