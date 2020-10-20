@@ -36,7 +36,7 @@
 
 // #pragma config statements should precede project file includes.
 // Use project enums instead of #define for ON and OFF.
-
+#include <stdio.h>
 #include <xc.h>
 #include <string.h>
 #define baud_9600 1041 //estandar
