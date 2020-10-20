@@ -146,6 +146,7 @@ segundos.*/
     /*2. Al detectar la tecla ‘E’ del teclado, el microcontrolador deberá encender un LED de color
 rojo. Al detectar la tecla ‘A’, el microcontrolador deberá apagar dicho LED. Por defecto,
 el LED debe permanecer apagado*/
+                
             if(U1STAbits.URXDA == 1){
             if(U1RXREG == 69 ){ // Tecla E en ascii
                 led_rojo = 1;        // Encender led D2
@@ -154,7 +155,24 @@ el LED debe permanecer apagado*/
                 led_rojo = 0;        // Apagar led D2
             }
     
-    
+  /*  3. Al pulsar la tecla ‘H’, se deberá ejecutar una rutina que haga parpadear un LED verde
+cada 250 milisegundos. Volver a pulsar la tecla ‘H’, deberá deshabilitar dicha función y
+por tanto el LED verde deberá permanecer apagado.*/
+                if(U1RXREG == 72){ // Tecla H en ascii
+                Hrutina = Hrutina!; //pulsar h activa o desactiva, es decir que hace lo contrario (!)                  
+            }
+                if(Hrutina == true){//si está pulsado por  primera vez
+                    while(Hrutina == true){     //mientras siga true se enciende, espera 250 miliesegundos y se apaga 
+                         led_verde =1;
+                         delay_ms(250);  
+                        led_verde = 0;
+                    }
+            }else if(Hrutina == false){//cuando se vuelva a pulsar se apaga
+                led_verde = 0;
+            }     
+           
+    }
+
     
     return 0;
     
