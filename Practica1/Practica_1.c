@@ -144,7 +144,7 @@ segundos.*/
         U1TRXREG = '\r';
         U1TRXREG = '\n';
         delay_ms(500);
-    }
+                
                 
     /*2. Al detectar la tecla ‘E’ del teclado, el microcontrolador deberá encender un LED de color
 rojo. Al detectar la tecla ‘A’, el microcontrolador deberá apagar dicho LED. Por defecto,
@@ -171,6 +171,9 @@ por tanto el LED verde deberá permanecer apagado.*/
                          led_verde =1;
                          delay_ms(250);  
                         led_verde = 0;
+                        if(U1RXREG == 72){ //permites al usuario salir del bucle
+                           hrutina = hrutina!; 
+                        }
                     }
             }else if(Hrutina == false){//cuando se vuelva a pulsar se apaga
                 led_verde = 0;
@@ -180,7 +183,9 @@ por tanto el LED verde deberá permanecer apagado.*/
 /*4. Al detectar la barra espaciadora, el contador del apartado 1, deberá resetearse y
 comenzar de nuevo la cuenta partiendo del valor 0.*/
                 //está donde el ejercicio 1
-
+                
+                
+  }//cerramos el while
     
     return 0;
     
