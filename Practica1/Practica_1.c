@@ -112,12 +112,20 @@ int main (void)
     
     AD1PCFGL = 0xFFFF; //Primer paso. Todos los pines configurados como pine digitales
     
+    TRISBbits.TRISB7 = 0;   // Configurar el pin RB3 como salida (Led rojo)   
+    TRISAbits.TRISA7 = 0;   // Configurar el pin RA0 del como salida (Led verde)
+    
     uart_config(baud_9600);
     
     unsigned char var = 0;
     
     while(1)
     {  
+        /*1. Imprimir por pantalla (Virtual Terminal) el nombre del Alumno. En la misma línea de
+datos, se deberá imprimir una variable llamada ‘contador’, que deberá aumentar
+de valor constantemente (Permite visualizar que la comunicación está funcionando
+durante todo el proceso). Esta variable debe aumentar de uno en uno, cada 0.5
+segundos.*/
         
         if(U1STAbits.URXDA == 1)
         {
@@ -131,7 +139,11 @@ int main (void)
         U1TRXREG = '\n';
         delay_ms(500);
     }
-    
+                
+    /*2. Al detectar la tecla ‘E’ del teclado, el microcontrolador deberá encender un LED de color
+rojo. Al detectar la tecla ‘A’, el microcontrolador deberá apagar dicho LED. Por defecto,
+el LED debe permanecer apagado*/
+                
     RPOR1bits.RP3R; //El pin del led
     
     
