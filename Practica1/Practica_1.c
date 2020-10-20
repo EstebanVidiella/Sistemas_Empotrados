@@ -134,7 +134,10 @@ segundos.*/
         {
             var = U1RXREG; //registros recibidos
         }
-        
+        if(U1RXREG == 32){
+                var = '0';
+            }
+        }
         sprintf(buffer, "Esteban y Bruno%d %c,var); 
         var= var++;
         //U1TXREG = var;//imprimirá el número de la variable en ascii
@@ -147,6 +150,7 @@ segundos.*/
 rojo. Al detectar la tecla ‘A’, el microcontrolador deberá apagar dicho LED. Por defecto,
 el LED debe permanecer apagado*/
                 
+                
             if(U1STAbits.URXDA == 1){
             if(U1RXREG == 69 ){ // Tecla E en ascii
                 led_rojo = 1;        // Encender led D2
@@ -158,6 +162,7 @@ el LED debe permanecer apagado*/
   /*  3. Al pulsar la tecla ‘H’, se deberá ejecutar una rutina que haga parpadear un LED verde
 cada 250 milisegundos. Volver a pulsar la tecla ‘H’, deberá deshabilitar dicha función y
 por tanto el LED verde deberá permanecer apagado.*/
+                
                 if(U1RXREG == 72){ // Tecla H en ascii
                 Hrutina = Hrutina!; //pulsar h activa o desactiva, es decir que hace lo contrario (!)                  
             }
@@ -172,6 +177,9 @@ por tanto el LED verde deberá permanecer apagado.*/
             }     
            
     }
+/*4. Al detectar la barra espaciadora, el contador del apartado 1, deberá resetearse y
+comenzar de nuevo la cuenta partiendo del valor 0.*/
+                
 
     
     return 0;
