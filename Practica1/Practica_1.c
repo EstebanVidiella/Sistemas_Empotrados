@@ -36,6 +36,7 @@
 
 // #pragma config statements should precede project file includes.
 // Use project enums instead of #define for ON and OFF.
+#include <stdbool.h>
 #include <stdio.h>
 #include <xc.h>
 #include <string.h>
@@ -163,13 +164,14 @@ el LED debe permanecer apagado*/
   /*  3. Al pulsar la tecla ‘H’, se deberá ejecutar una rutina que haga parpadear un LED verde
 cada 250 milisegundos. Volver a pulsar la tecla ‘H’, deberá deshabilitar dicha función y
 por tanto el LED verde deberá permanecer apagado.*/
+                
                 bool hrutina = false; //declaramos variable
                 if(U1RXREG == 72){ // Tecla H en ascii
                 hrutina = hrutina!; //pulsar h activa o desactiva, es decir que hace lo contrario (!)                  
             }
                 if(hrutina == true){//si está pulsado por  primera vez
                     while(hrutina == true){     //mientras siga true se enciende, espera 250 miliesegundos y se apaga 
-                         led_verde =1;
+                         led_verde = 1;
                          delay_ms(250);  
                         led_verde = 0;
                         if(U1RXREG == 72){ //permites al usuario salir del bucle
