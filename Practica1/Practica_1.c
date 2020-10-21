@@ -58,7 +58,7 @@ void delay_ms(unsigned long time_ms)
 void uart_config (unsigned int baud)
 {
     //configuracion de pines tx y rx
-    TRISCbits.TRISC2 = 1, //Pin de recepcion de uart establecido como entrada
+    TRISCbits.TRISC2 = 1, //Pin de recepcion de uart establecido como entrada //C2 porque el nuevo el nuevo pin tiene esa terminacion
     //PARA LOS PINES RC0 Y RC1
     //RPINR18bits.U1RXR = 16; //Pin de recepcion RC0 trabajando con el modulo uart (RP16) (registro que no dice la tabla y el numero se asigna segun el pin que usamos)
     //RPOR8bits.RP17R = 3; //U1TX conectado con el pin RC1 (RP17)
