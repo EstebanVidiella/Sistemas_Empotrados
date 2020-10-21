@@ -121,6 +121,7 @@ int main (void)
     uart_config(baud_9600);
     
     unsigned char var = 0;
+    int contador = 0;
     
     while(1)
     {  
@@ -135,15 +136,15 @@ segundos.*/
             var = U1RXREG; //registros recibidos
         }
         if(U1RXREG == 32){//ejercicio 4
-                var = 0;
+                contador = 0;
             }
         }
-        sprintf(buffer, "Esteban y Bruno%d %c,var); 
-        var= var++;
-        //U1TXREG = var;//imprimirá el número de la variable en ascii
-        U1TRXREG = '\r';
-        U1TRXREG = '\n';
-        delay_ms(500);
+            printf("Esteban y Bruno%d %c, contador);
+            U1TXREG = '\r';
+            U1TXREG = '\n';
+            contador++;
+            delay_ms(500);
+
                 
                 
     /*2. Al detectar la tecla ‘E’ del teclado, el microcontrolador deberá encender un LED de color
