@@ -1,0 +1,185 @@
+
+// DSPIC33FJ32MC204 Configuration Bit Settings
+
+// 'C' source line config statements
+
+
+// FBS
+#pragma config BWRP = WRPROTECT_OFF     // Boot Segment Write Protect (Boot Segment may be written)
+#pragma config BSS = NO_FLASH           // Boot Segment Program Flash Code Protection (No Boot program Flash segment)
+
+// FGS
+#pragma config GWRP = OFF               // General Code Segment Write Protect (User program memory is not write-protected)
+#pragma config GSS = OFF                // General Segment Code Protection (User program memory is not code-protected)
+
+// FOSCSEL
+#pragma config FNOSC = PRIPLL         // Oscillator Mode (Internal Fast RC (FRC) with divide by N)
+#pragma config IESO = ON                // Internal External Switch Over Mode (Start-up device with FRC, then automatically switch to user-selected oscillator source when ready)
+
+// FOSC
+#pragma config POSCMD = EC            // Primary Oscillator Source (Primary Oscillator Disabled)
+#pragma config OSCIOFNC = OFF           // OSC2 Pin Function (OSC2 pin has clock out function)
+#pragma config IOL1WAY = ON             // Peripheral Pin Select Configuration (Allow Only One Re-configuration)
+#pragma config FCKSM = CSDCMD           // Clock Switching and Monitor (Both Clock Switching and Fail-Safe Clock Monitor are disabled)
+
+// FWDT
+#pragma config WDTPOST = PS32768        // Watchdog Timer Postscaler (1:32,768)
+#pragma config WDTPRE = PR128           // WDT Prescaler (1:128)
+#pragma config WINDIS = OFF             // Watchdog Timer Window (Watchdog Timer in Non-Window mode)
+#pragma config FWDTEN = ON              // Watchdog Timer Enable (Watchdog timer always enabled)
+
+// FPOR
+#pragma config FPWRT = PWR128           // POR Timer Value (128ms)
+#pragma config ALTI2C = OFF             // Alternate I2C  pins (I2C mapped to SDA1/SCL1 pins)
+#pragma config LPOL = ON                // Motor Control PWM Low Side Polarity bit (PWM module low side output pins have active-high output polarity)
+#pragma config HPOL = ON                // Motor Control PWM High Side Polarity bit (PWM module high side output pins have active-high output polarity)
+#pragma config PWMPIN = ON              // Motor Control PWM Module Pin Mode bit (PWM module pins controlled by PORT register at device Reset)
+
+// FICD
+#pragma config ICS = PGD1               // Comm Channel Select (Communicate on PGC1/EMUC1 and PGD1/EMUD1)
+#pragma config JTAGEN = OFF             // JTAG Port Enable (JTAG is Disabled)
+
+// #pragma config statements should precede project file includes.
+// Use project enums instead of #define for ON and OFF.
+
+
+#include "xc.h"
+#include <string.h>
+#include <stdio.h>
+
+#define baud_9600 1041
+
+unsigned int done=1;
+
+void parpadeo (){
+
+                //para que no este una p en el registro
+    unsigned char var    = 0;   //para que este limpio la variable
+    unsigned long u ;
+    
+    while (1){                  //queremos que el led parpadee
+        LATAbits.LATA0 = !PORTAbits.RA0;
+        for (u=0;u<250; u++){ 
+            asm("NOP");
+        }
+     
+        
+        if (U1RXREG == 'h' || U1RXREG == 'H'){ 
+            LATAbits.LATA0 = 0; //lo apagamos al salir
+            return;         //retorno una p para que el main continue
+        }
+    }
+}
+
+void delay_ms (unsigned long time_ms){ 
+    unsigned long u ;
+    for (u=0;u<time_ms*450; u++){ 
+        asm("NOP");
+    }
+}
+void uart_config(unsigned int baud){ 
+    
+    //config de pines tx y rx
+    TRISCbits.TRISC2    = 1;    //pin de recpecionde uart establecido como entrada
+    //RPINR18bits.U1RXR   = 16;   //pin de recepcion rc0 trabajando con el modulo UART
+    //RPOR8bits.RP17R     = 3;    //U1TX conectado con el pin RC1 (RP17)
+    RPINR18bits.U1RXR   = 18;
+    RPOR9bits.RP19R     = 3;
+    
+    // config de registro de U1MODE
+    U1MODEbits.UARTEN   = 0; //deshablitar uart
+    U1MODEbits.USIDL    = 0; //continuar operacion en modo IDLE
+    U1MODEbits.IREN     = 0; //IR no usado
+    U1MODEbits.RTSMD    = 1; //control de flujo desactivado
+    U1MODEbits.UEN      = 0; //solo usamos el pin de Tx y el pin Rx
+    U1MODEbits.WAKE     = 0; //no quiero que la UART despiertedel modo sleep
+    U1MODEbits.LPBACK   = 0; //loopback deshabilitado
+    U1MODEbits.ABAUD    = 0; //automedicion de baudios deshabilitada
+    U1MODEbits.URXINV   = 0; //en estado de reposo, el receptor mantine un estado alto, high
+    U1MODEbits.BRGH     = 1; // modo high-speed
+    U1MODEbits.PDSEL    = 0; //8 bits de datos y paridad nula
+    U1MODEbits.STSEL    = 0; // 1 bit de stop al final de la trama de datos
+    
+    //config de registro de U1STA
+    U1STAbits.UTXISEL0  = 0; //tema de interrupciones no mirar
+    U1STAbits.UTXISEL1  = 0;
+    U1STAbits.UTXINV    = 0; //el estado en reposo del pin de transmision es high
+    U1STAbits.UTXBRK    = 0; //no usamos trama de sincronizacion
+    U1STAbits.UTXEN     = 1; //el transmisor a pleno funcionamiento
+    U1STAbits.URXISEL   = 0; //tema de interrupciones 
+    U1STAbits.ADDEN     = 0; //no usamos desbordamiento  
+    //U1STAbits.RIDLE     =0;
+    U1STAbits.OERR      = 0; //reseteamos el buffer de recepcion
+    
+    //configuramos la velocidad de transmision y recepcion
+    U1BRG = baud;
+    U1MODEbits.UARTEN   = 1;//UART habilitada al completo
+}
+
+
+int main(void) {
+    
+    PLLFBD = 38;
+    CLKDIVbits.PLLPOST = 0;
+    CLKDIVbits.PLLPRE = 0;
+    
+    TRISAbits.TRISA0 = 0; //instancio como salida
+    TRISBbits.TRISB3 = 0; //salida.
+    
+    delay_ms(10);
+    
+    LATAbits.LATA0 = 0;
+    LATBbits.LATB3 = 0;
+    
+    delay_ms(10); 
+    
+    
+    while(OSCCONbits.LOCK != 1);
+    
+    AD1PCFGL = 0xFFFF;
+    
+    uart_config(baud_9600);
+    
+    unsigned char var = 0;
+    int contador=0;
+    
+    
+    
+    
+    printf("Isma, Jorge y Marc    %d \r\n", contador);
+    delay_ms(10);
+  
+    while(1){
+            var = U1RXREG;
+            U1TXREG =  var;
+            
+            if((var =='E' || var== 'e') && done == 1){ 
+                LATBbits.LATB3 = 1;
+                done = 2;
+            }
+      
+            if ((var == 'A' || var == 'a') && done == 2){
+                LATBbits.LATB3 = 0;
+                done = 1 ;
+            }
+            if (var == 'H' || var == 'h'){ 
+                parpadeo();
+                
+            }
+            if(var == 32){
+                contador =0;
+               
+            }
+            printf(" %d ", contador);
+            //U1TXREG = printf("%c", contador);
+            U1TXREG = '\r';
+            U1TXREG = '\n';
+            contador++;
+            delay_ms(500);
+        
+    }
+     
+     
+    
+    return 0;
+}
