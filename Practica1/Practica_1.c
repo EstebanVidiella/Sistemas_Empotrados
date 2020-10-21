@@ -113,7 +113,7 @@ int main (void)
     CLKDIVbits.PLLPOST = 0; //N1= 2
     CLKDIVbits.PLLPRE = 0;//N2 = 2
     while(OSCCONbits.LOCK != 1); //Wait for PLL to lock
-    
+    //Esta linea nos da error pese a que es igual a lo visto en clase
     AD1PCFGL = 0xFFFF; //Primer paso. Todos los pines configurados como pine digitales
     
     TRISBbits.TRISB7 = 0;   // Configurar el pin RB3 como salida (Led rojo)   
