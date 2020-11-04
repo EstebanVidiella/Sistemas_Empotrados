@@ -51,6 +51,8 @@
 #define baud_9600 51 // Para un valor de 2MHz
 
 #define led_rojo LATBbits.LATB7 // inicializamos el led rojo en el pin RB4
+#define P1_pressed   !PORTBbits.RB4
+#define P2_pressed   !PORTBbits.RB7
 
 void delay_ms(unsigned long time_ms) {
   unsigned long u;
@@ -164,14 +166,14 @@ int main(void) {
      
     
      while (TMR1  < 15624){ //para que esto salga cada 2 segundos 
-      if (LATBbits.LATB4) {//si el registro del primer boton está a 1 
+      if (P1_pressed) {//si el registro del primer boton está a 1 
         printf("P1: Pulsado\r\n);        
         
       } else {//si está a 0 
        printf("P1: NO Pulsado\r\n); 
       }
 
-      if (LATBbits.LATB7) {//si el registro del segundo boton está a 1 
+      if (P2_pressed) {//si el registro del segundo boton está a 1 
         printf("P2: Pulsado\r\n);  
       } else {//si está a 0 
         printf("P2: NO Pulsado\r\n); 
