@@ -50,6 +50,8 @@
 
 #define baud_9600 51 // Para un valor de 2MHz
 
+#define led_rojo LATBbits.LATB7 // inicializamos el led rojo en el pin RB4
+
 void delay_ms(unsigned long time_ms) {
   unsigned long u;
   for (u = 0; u < time_ms * 90; u++) // Cálculo aproximado para una CPU a 2MHz
@@ -58,14 +60,7 @@ void delay_ms(unsigned long time_ms) {
   }
 }
 
-void EnviarCaracter(char c) {
-  while (U1STAbits.UTXBF);  // Mientras el buffer del puerto U1 este lleno, esperar en bucle while
-  U1TXREG = c;              // Si no esta lleno, proceder a enviar el byte
-}
-
-void EnviarString(char * s) {
-  while (( * s) != '\0') EnviarCaracter( * (s++)); // Mientras no se haya llegado al caracter nulo (final de trama), continuar imprimiendo datos.
-}                                                  // *s es un puntero que apunta hacia la dirección del string de datos que le indiquemos. (*(s++) toma el contenido actual, y posteriormente aumenta el valor de la dirección (siguiente caracter))
+                                              
 
 void uart_config(unsigned int baud) {
   // Configuración de pines tx y rx
@@ -106,16 +101,16 @@ void uart_config(unsigned int baud) {
 
 // Configuración timer 1
 void timer1_config(void) {
-  T1CONbits.TON = 0;
-  T1CONbits.TSIDL = 0;
-  T1CONbits.TCS = 0;
-  T1CONbits.TGATE = 0;
-  T1CONbits.TSYNC = 0;
-  T1CONbits.TCKPS = 3;
+  T1CONbits.TON = 0; //asegurarse de que está apagado
+  T1CONbits.TSIDL = 0;//continuar trabajando en idle mode
+  T1CONbits.TCS = 0;//frecuencia de reloj interna
+  T1CONbits.TGATE = 0; //desabilitamos esta funcion
+  T1CONbits.TSYNC = 0;//no importa
+  T1CONbits.TCKPS = 3;//el más alto (256)
 
-  PR1 = 0xFFFF;
+  PR1 = 0xFFFF;//para que no se resetee
 
-  T1CONbits.TON = 1;
+  T1CONbits.TON = 1;//activamos el timer
 }
 
 // Configuración timer 2 - apartado 3??
@@ -150,92 +145,50 @@ int main(void) {
   LATAbits.LATA0 = 0;
   LATBbits.LATB3 = 0;
   LATBbits.LATB4 = 0;
-
+ 
+  TRISBbits.TRISB7 = 0; //configuramos RB3 como salida (led rojo)
+  LATBbits.LATB4 = 1; //configuramos RB4 como entrada (botón 1)
+  LATBbits.LATB7 = 1; //configuramos RB7 como entrada (botón 2)
+  
   uart_config(baud_9600);
   timer1_config();
-
+  /* Bucle infinito apartado 1
   while (1) {
-    // Bucle infinito apartado 1
-    TMR1 = 0;
-    while (TMR1 < 780) {
-
-      memset(txbuffer, '\0', sizeof(txbuffer)); // Limpiar el array txbuffer con un valor por defecto (NULL)
-      
-      // Apartado 2 parte 1
-      if (LATBbits.LATB4) {
-        sprintf(txbuffer, "P1: Pulsado \r\n");
-        EnviarString(txbuffer); 
-      } else {
-        sprintf(txbuffer, "P1: No Pulsado \r\n");
-        EnviarString(txbuffer); 
+    
+       TMR1 = 0; //inicializamos
+       while (TMR1 < 7812)  //a partir de la formula counter time (1 segundo) = prescaler(256)*(TMRx + 1)/Fclk_timer(hz) (2Mhz)
+       LATAbits.LATA1 = !PORTAbits.RA1;
+  } */
+  
+  while (1){
+     
+    
+     while (TMR1  < 15624){ //para que esto salga cada 2 segundos 
+      if (LATBbits.LATB4) {//si el registro del primer boton está a 1 
+        printf("P1: Pulsado\r\n);        
+        
+      } else {//si está a 0 
+       printf("P1: NO Pulsado\r\n); 
       }
 
-      if (LATBbits.LATB7) {
-        sprintf(txbuffer, "P2: Pulsado \r\n");
-        EnviarString(txbuffer); 
-      } else {
-        sprintf(txbuffer, "P2: No Pulsado \r\n");
-        EnviarString(txbuffer); 
+      if (LATBbits.LATB7) {//si el registro del segundo boton está a 1 
+        printf("P2: Pulsado\r\n);  
+      } else {//si está a 0 
+        printf("P2: NO Pulsado\r\n); 
       }
       
     }
-
-    // Apartado 2 parte 2
-    if (!IFS0bits.T1IF) {
-      IFS0bits.T1IF = 0;
-      LATBbits.LATB3 = !LATBbits.LATB3;
-    }
-
+       while (TMR1 < 7812){//para que esto salga cada segundo
+          led_rojo = !led_rojo;  //led rojo cambia su estado cada segundo para parpadear 
+       }  
+   }
+  
   }
 }
 
+  /* while (!IFS0bits.T1IF)//se hará cuando este registro valga 0
+      IFS0bits.T1IF = 0;//porque se tiene que poner el registro manualmente a 0
+      LATBbits.LATB1 = !PORTBbits.RB1;   
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-    while(1)   // El ciclo se repite cada 500ms aproximadamente...
-    {   
-        if(contador++ == 1)    // Esperar a que sea el turno de invertir el estado de D1
-        {
-            led_D1 = !PORTBbits.RB3;  // Invertir estado de D1
-            contador = 0;      // Resetear contador. Esperar al siguiente ciclo.
-        }
-
-        if(P1_pressed)         // Si Pulsador P1 pulsado...
-        {
-            led_D2 = 1;        // Encender led D2
-            led_D3 = 1;        // Encender led D3
-        }
-       
-        else if(P2_pressed)    // Si P1 no se ha pulsado, determinar si Pulsador P2 lo está...
-        {
-            led_D3 = !PORTAbits.RA1;  // Invertir estado de D3
-        }
-        
-        else                   // Si ni el pulsador P1 ni P2 se encuentran pulsados, entonces...
-        {
-            led_D2 = 0;        // Apagar led D2
-            led_D3 = 0;        // Apagar led D3
-        }
-           
-        delay_ms(500);      
-    }
-  */
+*/
   
