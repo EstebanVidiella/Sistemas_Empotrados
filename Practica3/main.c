@@ -347,7 +347,8 @@ void __attribute__((__interrupt__, no_auto_psv)) _U1RXInterrupt(void)
 
 
 
-    
+//Driver de gestión de datos mediante UART_TX ISR (VECTOR DE INTERRUPCIÓN _U1TXInterrupt)
+
 void __attribute__((__interrupt__, no_auto_psv)) _U1TXInterrupt(void)    // Actualmente configurado para U1STAbits.UTXISEL = 0 (Solo se debe resetear el flag cuando la condicion de UTXISEL no sea cierta.)
 {  
     IEC0bits.U1TXIE = 0;                  // Disable UART1 Tx Interrupt  
