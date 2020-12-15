@@ -109,7 +109,7 @@ unsigned char dummy;
 const char cmd1[] = {"set ledred 1"}; // Comando para encender led rojo
 const char cmd2[] = {"set ledred 0"}; // Comando para apagar led rojo
 const char cmd3[] = {"print data"};   // Comando para imprimir datos 
-const char cmd4[] = {"stop data"};    // Comando para detener impresión de datos
+const char cmd4[] = {"stop data"};    // Comando para detener impresiÃ³n de datos
 const char cmd5[] = {"reset"};        // Comando para resetear contador
 
 
@@ -121,7 +121,7 @@ const char cmd5[] = {"reset"};        // Comando para resetear contador
 void delay_ms(unsigned long time_ms)
 {
     unsigned long u;
-    for(u = 0; u < time_ms*90; u++) // Cálculo aproximado para una CPU a 2MHz
+    for(u = 0; u < time_ms*90; u++) // CÃ¡lculo aproximado para una CPU a 2MHz
     {
         asm("NOP");
     }
@@ -136,51 +136,51 @@ void EnviarCaracter(char c)
 void EnviarString(char *s)
 {    
     while((*s) != '\0') EnviarCaracter(*(s++));  // Mientras no se haya llegado al caracter nulo (final de trama), continuar imprimiendo datos.
-}                                                // *s es un puntero que apunta hacia la dirección del string de datos que le indiquemos. (*(s++) toma el contenido actual, y posteriormente aumenta el valor de la dirección (siguiente caracter))
+}                                                // *s es un puntero que apunta hacia la direcciÃ³n del string de datos que le indiquemos. (*(s++) toma el contenido actual, y posteriormente aumenta el valor de la direcciÃ³n (siguiente caracter))
 
 
 
 void uart_config (unsigned int baud)
 {    
-    // Configuración de pines tx y rx
+    // ConfiguraciÃ³n de pines tx y rx
     TRISCbits.TRISC0  = 1;   // Pin de recepcion de uart establecido como entrada.
     RPINR18bits.U1RXR = 16;  // pin de recepcion rc0 trabajando con el modulo uart (RP16)
     RPOR8bits.RP17R   = 3;   // U1TX conectado con el pin RC1 (RP17)
     
     
     
-    // Configuración de registro de U1MODE
+    // ConfiguraciÃ³n de registro de U1MODE
     U1MODEbits.UARTEN = 0;     // Deshabilitar Uart.
-    U1MODEbits.USIDL  = 0;     // Continuar operación en modo IDLE
+    U1MODEbits.USIDL  = 0;     // Continuar operaciÃ³n en modo IDLE
     U1MODEbits.IREN   = 0;     // IR no usado
     U1MODEbits.RTSMD  = 1;     // Control de flujo desactivado.
     U1MODEbits.UEN    = 0;     // Solo usamos pin de Tx y pin de Rx
     U1MODEbits.WAKE   = 0;     // No quiero que la UART despierte del modo sleep
     U1MODEbits.LPBACK = 0;     // Loopback deshabilitado.
-    U1MODEbits.ABAUD  = 0;     // Automedición de baudios (bps) deshabilidada
+    U1MODEbits.ABAUD  = 0;     // AutomediciÃ³n de baudios (bps) deshabilidada
     U1MODEbits.URXINV = 0;     // En estado de reposo, el receptor mantiene un estado alto, high
     U1MODEbits.BRGH   = 1;     // Modo High-Speed
     U1MODEbits.PDSEL  = 0;     // 8 Bits de datos y paridad Nula (8N)
     U1MODEbits.STSEL  = 0;     // 1-bit de stop al final de la trama de datos.   (8N1)
 
     
-    // Configuración de registro de U1STA
+    // ConfiguraciÃ³n de registro de U1STA
     
     
     U1STAbits.UTXISEL0 = 0;    // Tema interrupciones (no mirar aun)
     U1STAbits.UTXISEL1 = 0;    // Tema interrupciones (no mirar aun)
      
     
-    U1STAbits.UTXINV   = 0;    // El estado en reposo del pin de transmisión es High
-    U1STAbits.UTXBRK   = 0;    // No usamos trama de sincronización
+    U1STAbits.UTXINV   = 0;    // El estado en reposo del pin de transmisiÃ³n es High
+    U1STAbits.UTXBRK   = 0;    // No usamos trama de sincronizaciÃ³n
     U1STAbits.UTXEN    = 1;    // El transmisor a pleno funcionamiento.
     U1STAbits.URXISEL  = 0;    // Tema interrupciones (no mirar aun)
     U1STAbits.ADDEN    = 0;    // No usamos direccionamiento.
     //U1STAbits.RIDLE    = 0;
-    U1STAbits.OERR     = 0;    // Reseteamos buffer de recepción
+    U1STAbits.OERR     = 0;    // Reseteamos buffer de recepciÃ³n
 
     
-    // Configuramos la velocidad de transmisión/recepcción de los datos
+    // Configuramos la velocidad de transmisiÃ³n/recepcciÃ³n de los datos
     U1BRG = baud;
     
     
@@ -266,7 +266,7 @@ int main(void)
         
         
         
-        if((Allowprint)&&(BufferLoadDone)&&(U1STAbits.TRMT))   // Si se cargaron todos los datos al buffer U1TXREG y finalizó la última transmisión...
+        if((Allowprint)&&(BufferLoadDone)&&(U1STAbits.TRMT))   // Si se cargaron todos los datos al buffer U1TXREG y finalizÃ³ la Ãºltima transmisiÃ³n...
         {
             if(U1_PrintRate_ISR++ >= 100)         // Determinar el ritmo de transmision de datos de la Uart1 Tx. Por ejemplo, 10 veces el valor de delay del bucle.(delay_ms(10))
             {
@@ -279,12 +279,32 @@ int main(void)
                 
                 if(U1STAbits.UTXBF) IFS0bits.U1TXIF = 0;          // Reseteo el flag de transmision ISR
                 asm("nop");
-                IEC0bits.U1TXIE = 1;                              // Iniciamos una nueva transmisión   
+                IEC0bits.U1TXIE = 1;                              // Iniciamos una nueva transmisiÃ³n   
             }
         }
         
         delay_ms(10);  
     }
+    if((BufferLoadDone)&&(U1STAbits.TRMT)) //Si se cargaron todos los datos al buffer U1TXREG y finalizo la ultima transmision
+    {
+        if(U1_PrintRate_ISR++ >= 10)//Determinar el ritmo de transmision de datos de la Uart1 Tx
+        {
+            memset(txbuffer_ISR, '\0', sizeof(txbuffer_ISR));//Clear Buffer and fill it with NULL
+            sprintf(txbuffer_ISR, "hola %d \r\n", contador++);
+            
+            nextchar = 0;
+            BufferLoadDone = 0;
+            U1_PrintRate_ISR = 0;
+            
+            if(U1STAbits.UTXBF) IFS0bits.U1TXIF = 0;//Reseteo el flag de trasmision ISR
+            asm("nop");
+            IEC0bits.U1TXIE = 1; //Iniciamos una nueva transmision
+        }
+    }
+    delay_ms(10);
+}
+    
+    
 }
 
 
@@ -332,11 +352,11 @@ void __attribute__((__interrupt__, no_auto_psv)) _U1TXInterrupt(void)    // Actu
 {  
     IEC0bits.U1TXIE = 0;                  // Disable UART1 Tx Interrupt  
     
-    if(!U1STAbits.UTXBF)                  // Mientras el buffer de transmisión NO se encuentre completo, continuar cargando el buffer con más datos.
+    if(!U1STAbits.UTXBF)                  // Mientras el buffer de transmisiÃ³n NO se encuentre completo, continuar cargando el buffer con mÃ¡s datos.
     {
         U1TXREG = txbuffer_ISR[nextchar++];  // Cargar el buffer con un nuevo dato.
         asm ("nop");
-        if(U1STAbits.UTXBF)               // Si el buffer de transmision se completó con el último dato incorporado al buffer, procedemos a resetear el flag. (Este método se usa para UTXISEL = 0)
+        if(U1STAbits.UTXBF)               // Si el buffer de transmision se completÃ³ con el Ãºltimo dato incorporado al buffer, procedemos a resetear el flag. (Este mÃ©todo se usa para UTXISEL = 0)
         {
             IFS0bits.U1TXIF = 0;          // Clear UART1 Tx Interrupt Flag  
         }
@@ -345,7 +365,7 @@ void __attribute__((__interrupt__, no_auto_psv)) _U1TXInterrupt(void)    // Actu
           
     if(nextchar == strlen(txbuffer_ISR))  // Si se ha finalizado la transmision de todos los caracteres --> Deshabilitar interrupcion y activar flags. strlen cuenta el numero de caracteres hasta encontrar NULL.
     {   
-        BufferLoadDone = 1;               // Informamos de que se ha terminado de cargar la cadena de texto de 'U1_TxBuffer_ISR' en U1TXREG. No implica que haya finalizado la transmisión. 
+        BufferLoadDone = 1;               // Informamos de que se ha terminado de cargar la cadena de texto de 'U1_TxBuffer_ISR' en U1TXREG. No implica que haya finalizado la transmisiÃ³n. 
         //Allowprint = 0;
     }   
     else IEC0bits.U1TXIE = 1;             // Enable UART1 Tx Interrupt   
