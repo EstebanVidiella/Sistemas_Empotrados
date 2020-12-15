@@ -96,10 +96,10 @@ unsigned char dummy;
 
 
 /*lista de comandos*/
-const char cmd1[] = {"set ledred 1"}; // Comando para encender led verde
-const char cmd2[] = {"stop ledgreen 0};    //  Comando para encender led rojo
-const char cmd3[] = {"set ledred 1"};   // Comando para encender led rojo 
-const char cmd4[] = {"stop ledred 0};    //  Comando para encender led rojo
+const char cmd1[] = {"set ledred"}; // Comando para encender led verde
+const char cmd2[] = {"stop ledgreen"};    //  Comando para encender led rojo
+const char cmd3[] = {"set ledred"};   // Comando para encender led rojo 
+const char cmd4[] = {"stop ledred"};    //  Comando para encender led rojo
 const char cmd5[] = {"print"}; //Comando para imprimir contador
   const char cmd6[] = {"stop"}; //Comando para parar impresion
 
@@ -228,23 +228,95 @@ int main(void)
 
         if(comando_detectado)
         {
-         if (!strcmp(((const char*) dataCMD_ISR), cmd1)) LATAbits.LATA1 = 1;
+         
+
+
+               if (comparaStr(dataCMD_ISR,cmd1)) {
+                memset(txbuffer_ISR, '\0', sizeof (txbuffer_ISR)); // Clear Buffer and fill it with NULL
+                sprintf(txbuffer_ISR, "set ledgreen%s\r\n");
+
+                nextchar = 0;
+                BufferLoadDone = 0;
+                U1_PrintRate_ISR = 0;
+
+                if (U1STAbits.UTXBF) IFS0bits.U1TXIF = 0; // Reset flag transmision ISR
+                asm("nop");
+                IEC0bits.U1TXIE = 1;
+            }
+            if (comparaStr(dataCMD_ISR,cmd2)) {
+                memset(txbuffer_ISR, '\0', sizeof (txbuffer_ISR)); 
+                sprintf(txbuffer_ISR, "stop ledgreen%s\r\n");
+
+                nextchar = 0;
+                BufferLoadDone = 0;
+                U1_PrintRate_ISR = 0;
+
+                if (U1STAbits.UTXBF) IFS0bits.U1TXIF = 0; 
+                asm("nop");
+                IEC0bits.U1TXIE = 1;
+            }
+            if (comparaStr(dataCMD_ISR,cmd3)) {
+                memset(txbuffer_ISR, '\0', sizeof (txbuffer_ISR)); 
+                sprintf(txbuffer_ISR, "set ledred%s\r\n");
+
+                nextchar = 0;
+                BufferLoadDone = 0;
+                U1_PrintRate_ISR = 0;
+
+                if (U1STAbits.UTXBF) IFS0bits.U1TXIF = 0; 
+                asm("nop");
+                IEC0bits.U1TXIE = 1;
+            }
+            if (comparaStr(dataCMD_ISR,cmd4)) {
+                memset(txbuffer_ISR, '\0', sizeof (txbuffer_ISR)); 
+                sprintf(txbuffer_ISR, "stop ledred%s\r\n");
+
+                nextchar = 0;
+                BufferLoadDone = 0;
+                U1_PrintRate_ISR = 0;
+
+                if (U1STAbits.UTXBF) IFS0bits.U1TXIF = 0; 
+                asm("nop");
+                IEC0bits.U1TXIE = 1;
+            }
+            if (comparaStr(dataCMD_ISR,cmd5)) {
+                memset(txbuffer_ISR, '\0', sizeof (txbuffer_ISR)); 
+                sprintf(txbuffer_ISR, "print%s\r\n");
+
+                nextchar = 0;
+                BufferLoadDone = 0;
+                U1_PrintRate_ISR = 0;
+
+                if (U1STAbits.UTXBF) IFS0bits.U1TXIF = 0; 
+                asm("nop");
+                IEC0bits.U1TXIE = 1;
+            }
+            if (comparaStr(dataCMD_ISR,cmd6)) {
+                memset(txbuffer_ISR, '\0', sizeof (txbuffer_ISR)); 
+                sprintf(txbuffer_ISR, "stop%s\r\n");
+
+                nextchar = 0;
+                BufferLoadDone = 0;
+                U1_PrintRate_ISR = 0;
+
+                if (U1STAbits.UTXBF) IFS0bits.U1TXIF = 0; 
+                asm("nop");
+                IEC0bits.U1TXIE = 1;
+            }
+            
+            memset(dataCMD_ISR,'\0',sizeof(dataCMD_ISR));   
+            data_count = 0;
+            comando_detectado = 0;
+        } 
+         delay_ms(100);
+        else
+        {
+            if (!strcmp(((const char*) dataCMD_ISR), cmd1)) LATAbits.LATA1 = 1;
             if (!strcmp(((const char*) dataCMD_ISR), cmd2)) LATAbits.LATA1 = 0;
             if (!strcmp(((const char*) dataCMD_ISR), cmd3)) LATAbits.LATA0 = 1;
             if (!strcmp(((const char*) dataCMD_ISR), cmd4)) LATAbits.LATA0 = 0;
             if (!strcmp(((const char*) dataCMD_ISR), cmd5)) Allowprint = 1;
             if (!strcmp(((const char*) dataCMD_ISR), cmd6)) Allowprint = 0;
-            else
-            {
-                /****code here***/
-            }
-            memset(dataCMD_ISR,'\0',sizeof(dataCMD_ISR));   // Resetear buffer con NULL
-            data_count = 0;
-            comando_detectado = 0;
-        } 
-        else
-        {
-                /****code here***/
         }
    
         
@@ -267,7 +339,7 @@ int main(void)
             }
         }
         
-        delay_ms(10);  
+        delay_ms(100);  
     }
     if((BufferLoadDone)&&(U1STAbits.TRMT)) //Si se cargaron todos los datos al buffer U1TXREG y finalizo la ultima transmision
     {
@@ -285,7 +357,7 @@ int main(void)
             IEC0bits.U1TXIE = 1; //Iniciamos una nueva transmision
         }
     }
-    delay_ms(10);
+    delay_ms(100);
 }
     
     
