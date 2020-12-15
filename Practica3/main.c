@@ -68,9 +68,6 @@
 
 unsigned char received_char = 0;
 char dataCMD_ISR[50];
-
-
-
 char txbuffer[200];
 
 
@@ -78,7 +75,7 @@ char txbuffer[200];
 
 unsigned char time_count = 0;
 unsigned char change_led_state = 0;
-
+int contador =  0;//contador
 
 
 // Modulo Uart. Variables empleando ISR
@@ -87,10 +84,7 @@ unsigned int nextchar = 0;
 unsigned char BufferLoadDone = 1;
 
 unsigned int U1_PrintRate_ISR = 0;
-unsigned int contador = 0;
-
-
-
+unsigned int count = 0;
 
 
 volatile unsigned int data_count = 0;
@@ -101,21 +95,13 @@ unsigned char dummy;
 
 
 
-
-
-
-
-/*EJEMPLO lista de comandos*/
-const char cmd1[] = {"set ledred 1"}; // Comando para encender led rojo
-const char cmd2[] = {"set ledred 0"}; // Comando para apagar led rojo
-const char cmd3[] = {"print data"};   // Comando para imprimir datos 
-const char cmd4[] = {"stop data"};    // Comando para detener impresión de datos
-const char cmd5[] = {"reset"};        // Comando para resetear contador
-
-
-
-
-
+/*lista de comandos*/
+const char cmd1[] = {"set ledred 1"}; // Comando para encender led verde
+const char cmd2[] = {"stop ledgreen 0};    //  Comando para encender led rojo
+const char cmd3[] = {"set ledred 1"};   // Comando para encender led rojo 
+const char cmd4[] = {"stop ledred 0};    //  Comando para encender led rojo
+const char cmd5[] = {"print"}; //Comando para imprimir contador
+  const char cmd6[] = {"stop"}; //Comando para parar impresion
 
 
 void delay_ms(unsigned long time_ms)
@@ -208,11 +194,7 @@ int main(void)
     
 #ifdef CPU_40MHz
     
-    //Configurar el oscilador para hacer funcionar la CPU a 40 MHz a partir de un reloj de entrada de 8MHz
-    //Fosc = Fin * M/(N1 * N2), Fcy = Fosc/2
-    //Fosc = 8M * 40/(2 * 2) = 80 MHz para un reloj de 8MHz de entrada
-    //Fcy = Fosc/2 = 80/2 = 40MHz (Frecuencia CPU)
-    PLLFBD = 38;                    // M  = 40
+    PLLFBD = 38;                    // M  = 2
     CLKDIVbits.PLLPOST = 0;         // N1 = 2
     CLKDIVbits.PLLPRE  = 0;         // N2 = 2
     while(OSCCONbits.LOCK != 1);    // Esperar a un PLL estable
@@ -232,24 +214,26 @@ int main(void)
     
     AD1PCFGL         = 0xFFFF;      // Primer paso. Todos los pines configurados como pines digitales
     TRISAbits.TRISA0 = 0;
-    TRISBbits.TRISB3 = 0;
+    TRISBbits.TRISA1 = 0;
     LATAbits.LATA0   = 0;
     LATBbits.LATB3   = 0;
  
     uart_config(baud_9600); 
-    
-    PR1 = 24999;
+    INTCON1bits.NSTDIS = 0; 
+    SRbits.IPL = 0; //Habilitar interrupciones
+   //PR1 = 24999;
 
     while(1)   
     {   
 
         if(comando_detectado)
         {
-            if ( !strcmp(((const char*)dataCMD_ISR), cmd1) ) LATAbits.LATA0  = 1;
-            if ( !strcmp(((const char*)dataCMD_ISR), cmd2) ) LATAbits.LATA0  = 0;
-            if ( !strcmp(((const char*)dataCMD_ISR), cmd3) ) Allowprint = 1;
-            if ( !strcmp(((const char*)dataCMD_ISR), cmd4) ) Allowprint = 0;
-            if ( !strcmp(((const char*)dataCMD_ISR), cmd5) ) contador = 0;
+         if (!strcmp(((const char*) dataCMD_ISR), cmd1)) LATAbits.LATA1 = 1;
+            if (!strcmp(((const char*) dataCMD_ISR), cmd2)) LATAbits.LATA1 = 0;
+            if (!strcmp(((const char*) dataCMD_ISR), cmd3)) LATAbits.LATA0 = 1;
+            if (!strcmp(((const char*) dataCMD_ISR), cmd4)) LATAbits.LATA0 = 0;
+            if (!strcmp(((const char*) dataCMD_ISR), cmd5)) Allowprint = 1;
+            if (!strcmp(((const char*) dataCMD_ISR), cmd6)) Allowprint = 0;
             else
             {
                 /****code here***/
