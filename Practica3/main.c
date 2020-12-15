@@ -308,13 +308,17 @@ int main(void)
 }
 
 
+//Vector de interrupción UART_RX ISR (_U1RXInterrupt) e Interrupción Timer1 (_T1Interrupt)
 
 void __attribute__((__interrupt__, no_auto_psv)) _T1Interrupt(void)
 {    
     IFS0bits.T1IF = 0;          // Reset Timer1 Interrupt
 }
 
-
+void __attribute__((__interrupt__, no_auto_psv))_U1RXInterrupt(void)
+{
+    recieved_char = U1RXREG; //Obtener caracter recibido en el buffer
+    IFS0bits.U1RXIF = 0; //Reset Rx interrupt
 
 
 
