@@ -310,7 +310,8 @@ int main(void)
             comando_detectado = 0;
         } 
         delay_ms(100);
-        
+}
+}
         //Vector de interrupción UART_RX ISR (_U1RXInterrupt) e Interrupción Timer1 (_T1Interrupt)
 
 void __attribute__((__interrupt__, no_auto_psv)) _T1Interrupt(void)
