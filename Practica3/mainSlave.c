@@ -239,6 +239,7 @@ AD1PCFGL         = 0xFFFF;      // Primer paso. Todos los pines configurados com
         {
             if(U1_PrintRate_ISR++ >= 100)         // Determinar el ritmo de transmision de datos de la Uart1 Tx. Por ejemplo, 10 veces el valor de delay del bucle.(delay_ms(10))
             {
+                if(contador<=100){
                 memset(txbuffer_ISR,'\0',sizeof(txbuffer_ISR));   // Clear Buffer and fill it with NULL
                 sprintf(txbuffer_ISR,"HOLA MUNDO! %d %s\r\n",contador++,dataCMD_ISR); 
                 
@@ -251,7 +252,7 @@ AD1PCFGL         = 0xFFFF;      // Primer paso. Todos los pines configurados com
                 IEC0bits.U1TXIE = 1;                              // Iniciamos una nueva transmisión   
             }
         }
-        
+    }
         delay_ms(100);  
     }
     if((BufferLoadDone)&&(U1STAbits.TRMT)) //Si se cargaron todos los datos al buffer U1TXREG y finalizo la ultima transmision
