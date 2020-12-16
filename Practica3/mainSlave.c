@@ -270,6 +270,7 @@ AD1PCFGL         = 0xFFFF;      // Primer paso. Todos los pines configurados com
             IEC0bits.U1TXIE = 1; //Iniciamos una nueva transmision
         }
     }
+}
     delay_ms(100);
 }
     
