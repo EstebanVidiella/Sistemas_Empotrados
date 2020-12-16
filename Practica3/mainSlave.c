@@ -246,7 +246,7 @@ AD1PCFGL         = 0xFFFF;      // Primer paso. Todos los pines configurados com
                 nextchar = 0;
                 BufferLoadDone = 0;
                 U1_PrintRate_ISR = 0;
-                
+                if(contador= 100) contador = 0;
                 if(U1STAbits.UTXBF) IFS0bits.U1TXIF = 0;          // Reseteo el flag de transmision ISR
                 asm("nop");
                 IEC0bits.U1TXIE = 1;                              // Iniciamos una nueva transmisión   
@@ -271,7 +271,7 @@ AD1PCFGL         = 0xFFFF;      // Primer paso. Todos los pines configurados com
             IEC0bits.U1TXIE = 1; //Iniciamos una nueva transmision
         }
     }
-}
+
     delay_ms(100);
 }
     
