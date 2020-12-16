@@ -226,7 +226,8 @@ int main(void)
 
         return true;
     }
-    
+     while(1)   
+    {   
     if(comando_detectado)
         {
          
