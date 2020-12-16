@@ -98,13 +98,7 @@ const char cmd4[] = {"stop ledred"};    //  Comando para encender led rojo
 const char cmd5[] = {"print"}; //Comando para imprimir contador
 const char cmd6[] = {"stop"}; //Comando para parar impresion
 
-//Comandos prueba
-const char cmd1[] = {"1"};
-const char cmd2[] = {"2"};
-const char cmd3[] = {"3"};
-const char cmd4[] = {"4"};
-const char cmd5[] = {"5"};
-const char cmd6[] = {"6"};
+
 
 
 void delay_ms(unsigned long time_ms)
